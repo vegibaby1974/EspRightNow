@@ -1,0 +1,20 @@
+#######################################
+# Syntax Coloring Map EspRightNow
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+Esp_Now_ESP32  KEYWORD1  Esp_Now_ESP32
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+begin  KEYWORD2
+print  KEYWORD2
+sbuffer  KEYWORD2
+cbuffer KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
