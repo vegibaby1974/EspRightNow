@@ -189,6 +189,12 @@ struct Esp_Now_ESP32 {
       
       return bytesRead;
     }
+    size_t readBytesUntil(const char* buffer, char terminator) {
+      String baseResult = readStringUntil(terminator);
+      size_t length = baseResult.length();
+      buffer = baseResult.c_str();
+      return length;
+    }
     
     // Read until a terminator character is found
     String readStringUntil(char terminator) {
