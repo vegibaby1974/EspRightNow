@@ -10,7 +10,7 @@ Sending functions are just like regular Arduino Serial functions (Serial.print()
 ## Receiving functions
 Receiving functions are also just like the regular Serial functions. It has functions: void flush(), int read(), String readString(bool oneSecondDelay = false), String readStringUntil(char terminator), size_t readBytes(char *buffer, size_t length /*to read all bytes use int available()*/, bool oneSecondDelay = false), size_t readBytesUntil(char* buffer, char terminator), and int available(). Do NOT manually change variables like 'mainBuffer' to prevent messing up data stored.
 ## Usage example
-
+```
 #include <EspRightNow.h>
 Esp_Now_ESP32 espnow;
 uint8_t mac[6] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00}; //Replace with your other board's MAC address
@@ -31,3 +31,4 @@ void loop() {
       Serial.println(espnow.readString(false));
     }
 }
+```
