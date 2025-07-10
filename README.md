@@ -8,7 +8,7 @@ To initialize the ESP-NOW WiFi system, #include the EspRightNow library at the t
 ## Sending functions
 Sending functions are just like regular Arduino Serial functions (Serial.print() or Serial.println(), etc.) and if the payload is over 250 bytes, it will be sent in chunks. It supports most variable types (most integers, unsigned integers, Arduino strings, and C strings); These functions are blocking but they happen very fast anyway.
 ## Receiving functions
-Receiving functions are also just like the regular Serial functions. It has functions: void flush(), int read(), String readString(bool oneSecondDelay = false), String readStringUntil(char terminator), size_t readBytes(char *buffer, size_t length /*to read all bytes use int available()*/, bool oneSecondDelay = false), size_t readBytesUntil(char* buffer, char terminator), and available. Do NOT manually change variables like 'mainBuffer' to prevent messing up data stored.
+Receiving functions are also just like the regular Serial functions. It has functions: void flush(), int read(), String readString(bool oneSecondDelay = false), String readStringUntil(char terminator), size_t readBytes(char *buffer, size_t length /*to read all bytes use int available()*/, bool oneSecondDelay = false), size_t readBytesUntil(char* buffer, char terminator), and int available(). Do NOT manually change variables like 'mainBuffer' to prevent messing up data stored.
 ## Usage example
 
 #include <EspRightNow.h>
