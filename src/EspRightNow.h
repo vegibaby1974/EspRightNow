@@ -17,12 +17,37 @@ struct Esp_Now_ESP32 {
     uint8_t* peerMacAddress;
 
     // Static wrapper to call the actual member function
-    // Use the universal older callback format that works on all versions
+    // Multi-layered version detection for maximum compatibility
+    #if defined(ESP_ARDUINO_VERSION_MAJOR) && ESP_ARDUINO_VERSION_MAJOR >= 3
+    // For Arduino ESP32 Core 3.x+ (uses esp_now_recv_info*)
+    static void on_data_recv_static(const esp_now_recv_info* recv_info, const uint8_t* data, int length) {
+      if (instance != nullptr) {
+        instance->on_data_recv(recv_info->src_addr, data, length);
+      }
+    }
+    #elif defined(ESP_ARDUINO_VERSION_MAJOR) && ESP_ARDUINO_VERSION_MAJOR >= 2
+    // For Arduino ESP32 Core 2.x (uses esp_now_recv_info_t*)
+    static void on_data_recv_static(const esp_now_recv_info_t* recv_info, const uint8_t* data, int length) {
+      if (instance != nullptr) {
+        instance->on_data_recv(recv_info->src_addr, data, length);
+      }
+    }
+    #elif defined(ESP_ARDUINO_VERSION) && ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(2, 0, 0)
+    // Fallback for Core 2.x if MAJOR macro doesn't exist
+    static void on_data_recv_static(const esp_now_recv_info_t* recv_info, const uint8_t* data, int length) {
+      if (instance != nullptr) {
+        instance->on_data_recv(recv_info->src_addr, data, length);
+      }
+    }
+    #else
+    // For older Arduino ESP32 Core versions (direct MAC parameter)
+    // This is the most universally compatible format
     static void on_data_recv_static(const uint8_t* mac, const uint8_t* data, int length) {
       if (instance != nullptr) {
         instance->on_data_recv(mac, data, length);
       }
     }
+    #endif
     
     static void on_data_send_static(const uint8_t* mac, esp_now_send_status_t result) {
       if (instance != nullptr) {
