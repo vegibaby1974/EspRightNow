@@ -2,6 +2,7 @@
 #include <WiFi.h>
 #include <esp_now.h>
 #include "stdint.h"
+#include "stdarg.h"
 
 struct EspNowDataBuffer {
   String sBuffer;
@@ -147,6 +148,65 @@ struct Esp_Now_ESP32 {
     void println(String val) { print(val); print("\n"); }
     void println(const char* val) { print(val); print("\n"); }
     void println() { print("\n"); } // Just a newline
+    //PRINTF FUNCTIONS - Also like Serial interface, and with added prinfln()
+    void printf(const char* format, ...) {
+      va_list args;
+      va_start(args, format);
+      
+      // First, determine the required buffer size
+      va_list args_copy;
+      va_copy(args_copy, args);
+      int len = vsnprintf(nullptr, 0, format, args_copy);
+      va_end(args_copy);
+      
+      if (len > 0) {
+        // Allocate buffer with space for null terminator
+        char* buffer = new char[len + 1];
+        
+        // Format the string
+        vsnprintf(buffer, len + 1, format, args);
+        
+        // Send the formatted string
+        sendData(buffer, len);
+        
+        // Clean up
+        delete[] buffer;
+      }
+      
+      va_end(args);
+    }
+
+    // Printf with newline (like println)
+    void printfln(const char* format, ...) {
+      va_list args;
+      va_start(args, format);
+      
+      // First, determine the required buffer size
+      va_list args_copy;
+      va_copy(args_copy, args);
+      int len = vsnprintf(nullptr, 0, format, args_copy);
+      va_end(args_copy);
+      
+      if (len > 0) {
+        // Allocate buffer with space for null terminator and newline
+        char* buffer = new char[len + 2];
+        
+        // Format the string
+        vsnprintf(buffer, len + 1, format, args);
+        
+        // Add newline
+        buffer[len] = '\n';
+        buffer[len + 1] = '\0';
+        
+        // Send the formatted string with newline
+        sendData(buffer, len + 1);
+        
+        // Clean up
+        delete[] buffer;
+      }
+      
+      va_end(args);
+    }
 
     // READ FUNCTIONS - Similar to Serial interface
     
