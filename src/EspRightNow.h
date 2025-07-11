@@ -17,22 +17,13 @@ struct Esp_Now_ESP32 {
     uint8_t* peerMacAddress;
 
     // Static wrapper to call the actual member function
-    // Compatible with both old and new Arduino ESP32 core versions
-    #if ESP_ARDUINO_VERSION >= ESP_ARDUINO_VERSION_VAL(2, 0, 0)
-    // For Arduino ESP32 Core 2.x+ (uses esp_now_recv_info_t)
-    static void on_data_recv_static(const esp_now_recv_info_t* recv_info, const uint8_t* data, int length) {
-      if (instance != nullptr) {
-        instance->on_data_recv(recv_info->src_addr, data, length);
-      }
-    }
-    #else
-    // For older Arduino ESP32 Core versions (direct MAC parameter)
+    // Use the universal older callback format that works on all versions
     static void on_data_recv_static(const uint8_t* mac, const uint8_t* data, int length) {
       if (instance != nullptr) {
         instance->on_data_recv(mac, data, length);
       }
     }
-    #endif
+    
     static void on_data_send_static(const uint8_t* mac, esp_now_send_status_t result) {
       if (instance != nullptr) {
         instance->on_data_send(mac, result);
@@ -148,6 +139,7 @@ struct Esp_Now_ESP32 {
     void println(String val) { print(val); print("\n"); }
     void println(const char* val) { print(val); print("\n"); }
     void println() { print("\n"); } // Just a newline
+    
     //PRINTF FUNCTIONS - Also like Serial interface, and with added prinfln()
     void printf(const char* format, ...) {
       va_list args;
